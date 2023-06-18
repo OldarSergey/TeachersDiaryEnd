@@ -3,8 +3,98 @@
 @{
     ViewData["Title"] = "Home page";
 }
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="d-flex row  ">
+        <div class="col">
+            <a class="btn mb-2" style="background-color:cadetblue; color:white" asp-page="Index" asp-page-handler="AddStudent" asp-route-id="@Model.UserId">Добавить студента</a>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+
+            <a class="btn mb-2 btn-secondary" data-bs-toggle="modal" data-bs-target="#group-add-modal" style="color:white" asp-page="AddEmployee">Добавить группу</a>
+        </div>
+
+        <div class="col ">
+            <form asp-page-handler="SearchStudent" asp-route-id="@Model.UserId">
+                <div class="input-group mb-3 m">
+                    <input type="text" class="form-control"  asp-for="@Model.SearchStudent" placeholder="Введите имя студента" aria-label="Search">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-outline-secondary w-100 ms-2">Найти</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col position-relative">
+            <form asp-page-handler="SortStudent">
+                <select class="form-select form-select-lg w-50 h-75  fs-6" asp-for="@Model.SortStudent" style="margin-left:50%">
+                    <option selected value="1">Отменить сортировку</option>
+                    <option value="2">по имени</option>
+                    <option value="3">по фамилии</option>
+                    <option value="3">по группе</option>
+                </select>
+                <button type="submit" class="btn btn-secondary" style="position:absolute; top:0">Отсортировать</button>
+            </form>
+        </div>
+    </div>
+
+     @foreach(var item in Model.StudentsList)
+     { 
+         <ul>
+             <li class="list-group-item d-flex px-0"> 
+                 <div class="w-100 d-flex"> 
+                     <div class="col-10 px-1 my-auto">
+                        <h5 class="m-0 p-0">@item.FirstName</h5>
+                        <h6 class="text-black-50 m-0 p-0">
+                            @item.LastName  @item.MiddleName  @item.Email
+                            @if (@item.Group != null)
+                            {
+                                @item.Group.Title
+                                
+                            }
+                        </h6> 
+                    </div>
+                    <form method="post" asp-page="AchievementsStudent" asp-page-handler="Achievements">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button type="submit" class="btn btn-secondary w-100">Открыть</button>
+                    </form>
+                    <form method="post" class="ms-4" asp-page-handler="DeleteStudent" asp-route-id="@item.Id">
+                        <button type="submit" class="btn btn-danger w-100">Удалить</button>
+                    </form>
+                 </div> 
+            </li> 
+         </ul>
+     }     
+}
+
+
+<div class="modal fade" id="group-add-modal" tabindex="-1" aria-labelledby="add-group-modalLabes" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add-group-modalLabel">Добавить проект</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-page-handler="AddGroup">
+                    <div class="form-group mb-3">
+                        <label asp-for="InputGroup.Name" class="col-sm-2 col-form-label"></label>
+                        <input asp-for="InputGroup.Name" class="form-control" id="inputTitle" />
+                        <span asp-validation-for="InputGroup.Name" style="color:darkred"></span>
+                    </div>
+                    <div class="float-end">
+                        <button type="button" class="btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        <button type="submit" class="btn-success">Добавить</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
 </div>
+
+
+@if (!User.Identity.IsAuthenticated)
+{
+    <h1>Советую вам зарегистрироваться, ибо так вы сможете познать истинный функционал данной программы</h1>
+}

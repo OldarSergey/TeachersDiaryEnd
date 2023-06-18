@@ -16,6 +16,11 @@ namespace TeachersDiary.Configurations
                 .IsRequired()
                 .HasMaxLength(500)
                 .HasColumnType("nvarchar");
+            
+            builder.Property(ac => ac.FilePath)
+           .IsRequired()
+           .HasMaxLength(500)
+           .HasColumnType("nvarchar");
 
             builder.Property(ac => ac.Date)
                 .HasColumnType("datetime");

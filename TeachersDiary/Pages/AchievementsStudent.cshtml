@@ -1,0 +1,44 @@
+﻿@page
+@model TeachersDiary.Pages.AchievementsStudentModel
+@{
+}
+<div class="text-center">
+    <h1 class="display-4">
+        <strong>
+            Дипломы студента
+        </strong>
+    </h1>
+</div>
+
+<div class="container">
+
+    <div class="mb-3 mt-3">
+        <form method="post" enctype="multipart/form-data" asp-page-handler="AddFile">
+            <input type="hidden" name="StudentId" value="@Model.StudentId" /> <!-- Добавлено скрытое поле с StudentId -->
+            <div class="mb-3">
+                <input type="file" name="file" class="form-control" accept=".jpg" />
+            </div>
+
+            <button type="submit" class="btn btn-primary mb-3">Upload</button>
+        </form>
+
+
+        <div class="row" id="updateDiv">
+        </div>
+    </div>
+</div>
+
+<div class="row mx-5 justify-content-center ">
+    @if (Model.Achievements != null)
+    {
+        @foreach (var item in Model.Achievements)
+        {
+            <div class="col-3 ms-5 card shadow mb-5">
+                <div class="col border-secondary" style="display:flex;">
+                    <img src="/UploadedFiles/@item.Name" style="max-height:350px;margin-top:1%; max-width:300px;">
+                </div>
+            </div>
+        }
+    }
+
+</div>

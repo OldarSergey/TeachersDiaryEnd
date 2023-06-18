@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TeachersDiary.Data;
 using TeachersDiary.Entities;
+using TeachersDiary.Service;
 
 namespace TeachersDiary
 {
@@ -10,9 +11,11 @@ namespace TeachersDiary
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
             // Add services to the container.
-            builder.Services.AddRazorPages();
+            builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+            builder.Services.AddScoped<IGroupService, GroupService>();
+            builder.Services.AddScoped<IStudentService, StudentService>();
+            builder.Services.AddScoped<IAchievementService, AchievementService>();
 
             var configuration = builder.Configuration;
 
@@ -40,6 +43,7 @@ namespace TeachersDiary
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseAuthentication(); ;
 
             app.UseAuthorization();
 
